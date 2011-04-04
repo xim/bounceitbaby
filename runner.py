@@ -8,13 +8,14 @@ u"""Usage: %prog [options] filename(s)
 Makes pretty bounce diagrams from misc. input formats.
 Examples:
   %prog logfile.log  – Analyzes logfile.log and visualizes
-  %prog -d           – Analyzes in debug mode
+  %prog -d -         – Analyzes in debug mode from STDIN
   %prog -o PNG       – Force 'PNG' output module
   %prog -l Foo       – Force 'Foo' log parser module
 """
 
 from optparse import OptionParser
 import logging
+import sys
 
 import importer, grapher
 
@@ -54,6 +55,13 @@ def main():
             )
 
     for arg in args:
+        if arg == '-':
+            if options.log_parser == 'Guess':
+                logging.critical('Not supported:\n' + \
+                        ' Guessing input format from STDIN')
+                sys.exit(1)
+            arg = '/dev/stdin'
+
         grapher_instance = getattr(grapher, options.graph_output)()
         log_parser_instance = getattr(importer, options.log_parser)()
         data = []
