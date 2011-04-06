@@ -11,7 +11,7 @@ class LogReader(object):
     line_fmt = None
 
 class Foo(LogReader):
-    line_fmt = r'^(\S+)\s+(\S+)\s+(\S+)$'
+    line_fmt = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s*$'
 
     def process_lines(self, lines):
         for line in lines:
