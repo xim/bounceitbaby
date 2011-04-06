@@ -1,4 +1,5 @@
 import logging
+import sys
 
 GRAPH_TYPES = ['Auto', 'WX', 'PNG', 'GTK']
 
@@ -24,13 +25,13 @@ class PNG(Grapher):
     def process_data(self, *args, **kwargs):
         super(PNG, self).process_data(*args, **kwargs)
         logging.critical('PNG NOT IMPLEMENTED')
-        return False
+        sys.exit(1)
 
 class WX(Grapher):
     def process_data(self, *args, **kwargs):
         super(WX, self).process_data(*args, **kwargs)
         logging.critical('WX NOT IMPLEMENTED')
-        return False
+        sys.exit(1)
 
 class GTK(Grapher):
     def __init__(self):
