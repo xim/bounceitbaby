@@ -36,7 +36,7 @@ class GTK(Grapher):
     def __init__(self):
         super(GTK, self).__init__()
         import gtk_grapher
-        self._grapher = gtk_grapher.graph
+        self._grapher = gtk_grapher.visualize
     def process_data(self, *args, **kwargs):
         super(GTK, self).process_data(*args, **kwargs)
         self._grapher(self._data)
