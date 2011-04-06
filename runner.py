@@ -42,7 +42,7 @@ def main():
     options, args = parser.parse_args()
 
     if not args:
-        raise Exception('You need to pass at least one file name')
+        raise Exception('Pass at least one file name (- for STDIN)')
 
     if options.loglevel == logging.DEBUG:
         log_fmt = '[%(levelname)8s] %(asctime)s: %(message)s'
