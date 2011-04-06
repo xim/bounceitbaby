@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import re
 
 LOG_TYPES = ['Guess', 'Foo']
@@ -10,16 +12,34 @@ class LogReader(object):
     """
     line_fmt = None
 
-class Foo(LogReader):
-    line_fmt = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s*$'
+    def process_lines(self, lines):
+        pass
 
+class BaseRegExReader(LogReader):
+    """
+    Base class for simple regex line parsers.
+
+    Uses line_fmt and re.match(…).groups()
+    """
     def process_lines(self, lines):
         for line in lines:
             match = re.match(self.line_fmt, line)
             if match is not None:
                 yield match.groups()
 
+class Foo(BaseRegExReader):
+    """
+    A test regex based parser.
+
+    Expexts "from to time time", whitespace seperated.
+    """
+    line_fmt = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s*$'
+
 class Guess(LogReader):
+    """
+    A log reader that reads a few lines and tests it against all available log
+    parser classes using their line_fmt string. Does not work from STDIN.
+    """
     def __init__(self):
         self.reader = None
         self.readers = [Foo]
