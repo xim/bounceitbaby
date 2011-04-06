@@ -67,6 +67,8 @@ def main():
         data = []
         with open(arg) as input_file:
             data = log_parser_instance.process_lines(input_file)
+            data = list(data)
+            print data
             grapher_instance.process_data(data)
 
 if __name__ == '__main__':

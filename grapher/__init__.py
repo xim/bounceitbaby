@@ -1,6 +1,6 @@
 import logging
 
-GRAPH_TYPES = ['Auto', 'WX', 'PNG']
+GRAPH_TYPES = ['Auto', 'WX', 'PNG', 'GTK']
 
 class Grapher(object):
     """
@@ -32,9 +32,23 @@ class WX(Grapher):
         logging.critical('WX NOT IMPLEMENTED')
         return False
 
-Auto = WX
+class GTK(Grapher):
+    def __init__(self):
+        super(GTK, self).__init__()
+        import gtk_grapher
+        self._grapher = gtk_grapher.graph
+    def process_data(self, *args, **kwargs):
+        super(GTK, self).process_data(*args, **kwargs)
+        self._grapher(self._data)
+
+Auto = GTK
 try:
-    import wxversion
+    import gtk_grapher
 except ImportError:
-    logging.warning('wxPython not available for visualization')
-    Auto = PNG
+    logging.warning('GTK not available for visualization')
+    Auto = WX
+    try:
+        import wxversion
+    except ImportError:
+        logging.warning('wxPython not available for visualization')
+        Auto = PNG
