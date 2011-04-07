@@ -6,53 +6,61 @@ GRAPH_TYPES = ['Auto', 'WX', 'PNG', 'GTK']
 class Grapher(object):
     """
     Basic class for all common functions in Graphs.
+
+    Which currently is nothing.
+    """
+    def __init__(self):
+        """
+        __init__ of Grapher classes should throw ImportError if a needed
+        library is missing.
+        """
+
+class ExportFileGrapher(Grapher):
+    """
+    All graphers that export to a file inherit from here.
     """
 
-    def __init__(self):
-        self._data = []
-
-    def set_data(self, data):
-        """
-        Set data to be processed by the module
-        """
-        self._data[0:] = data
-
-    def process_data(self, data=None):
-        if data is not None:
-            self.set_data(data)
-
-class PNG(Grapher):
+class PNG(ExportFileGrapher):
+    """
+    Save to a PNG file
+    """
     def process_data(self, *args, **kwargs):
-        super(PNG, self).process_data(*args, **kwargs)
         logging.critical('PNG NOT IMPLEMENTED')
         sys.exit(1)
 
-class WX(Grapher):
+class UIGrapher(Grapher):
+    """
+    UI grapher classes inherit from this.
+    """
+    def process_data(self, data):
+        self._grapher(data)
+
+class WX(UIGrapher):
     def __init__(self):
-        super(WX, self).__init__()
         import wx_grapher
         self._grapher = wx_grapher.visualize
-    def process_data(self, *args, **kwargs):
-        super(WX, self).process_data(*args, **kwargs)
-        self._grapher(self._data)
 
-class GTK(Grapher):
+class GTK(UIGrapher):
     def __init__(self):
-        super(GTK, self).__init__()
         import gtk_grapher
         self._grapher = gtk_grapher.visualize
-    def process_data(self, *args, **kwargs):
-        super(GTK, self).process_data(*args, **kwargs)
-        self._grapher(self._data)
 
-Auto = WX
-try:
-    import wx_grapher
-except ImportError:
-    logging.warning('wxPython not available for visualization')
-    Auto = GTK
-    try:
-        import gtk_grapher
-    except ImportError:
-        logging.warning('GTK not available for visualization')
-        Auto = PNG
+class Auto(Grapher):
+    def __init__(self):
+        self.outputs = [WX, GTK, PNG]
+        self._output = None
+
+    def try_inits(self):
+        for output in self.outputs:
+            try:
+                self._output = output()
+                return
+            except ImportError:
+                logging.debug('%s not available for output' % \
+                        type(output).__name__)
+        raise ImportError('Could not find any valid output modules')
+
+    def process_data(self, data):
+        if self._output is None:
+            self.try_inits()
+        self._output.process_data(data)
