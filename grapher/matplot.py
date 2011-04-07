@@ -2,6 +2,7 @@ import logging
 
 from matplotlib.figure import Figure
 from matplotlib.patches import FancyArrowPatch
+from matplotlib.ticker import MaxNLocator
 
 def graph(data):
     """
@@ -10,6 +11,7 @@ def graph(data):
 
     fig = Figure(dpi=90)
     axes = fig.add_axes((.05, .085, .92, .865))
+    axes.xaxis.set_minor_locator(MaxNLocator(nbins=25))
     axes.set_xlabel('Time')
 
     colors = ('r', 'g', 'b', 'c', 'm', 'k', 'y')
