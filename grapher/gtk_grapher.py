@@ -1,5 +1,5 @@
 """
-FigureCanvasGTK/GTKAgg widget in a gtk.ScrolledWindow
+FigureCanvasGTKAgg widget in a gtk.ScrolledWindow
 """
 
 import gtk
