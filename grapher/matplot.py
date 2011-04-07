@@ -35,7 +35,7 @@ def graph(data):
     lower_y, upper_y = axes.get_ylim()
     axes.set_ybound(lower=lower_y - .1 * upper_y, upper=upper_y + .1 * upper_y)
 
-    axes.get_yaxis().set_visible(False)
+    axes.yaxis.set_visible(False)
 
     lower, upper = axes.get_xlim()
     for actor in actors:
