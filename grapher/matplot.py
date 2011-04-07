@@ -1,7 +1,7 @@
 import logging
 
 from matplotlib.figure import Figure
-from matplotlib.lines import Line2D
+from matplotlib.patches import FancyArrowPatch
 
 def graph(data):
     """
@@ -17,14 +17,19 @@ def graph(data):
     actors = {}
     actor_id = 0
     for from_act, to_act, x0, x1 in data:
-        # TODO: Is this ugly?
+
+        # TODO: Is this ugly? Maybe not ugly enough to do something about it?
         for actor in (from_act, to_act):
             if not actor in actors:
                 actors[actor] = actor_id
                 actor_id += 1
-        # TODO: Style the arrows. Make different styles for different signal
-        # types, if wanted. Make a legend for these (seperately fro actors?)
-        axes.add_line(Line2D((x0, x1),(actors[from_act], actors[to_act])))
+
+        # TODO: Make different styles for different signal types, if wanted.
+        # Make a legend for these (seperately fro actors?)
+        x0, y0, x1, y1 = float(x0), actors[from_act], float(x1), actors[to_act]
+        axes.add_patch(FancyArrowPatch(
+                (x0, y0), (x1, y1), linewidth=1.3,
+                arrowstyle='->, head_width=3, head_length=3'))
 
     axes.autoscale_view()
     lower_y, upper_y = axes.get_ylim()
