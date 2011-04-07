@@ -9,7 +9,7 @@ def graph(data):
     The method that makes a matplotlib graph from data.
     """
 
-    fig = Figure(dpi=90)
+    fig = Figure(dpi=90, figsize=(25, 1))
     axes = fig.add_axes((.05, .085, .92, .865))
     axes.xaxis.set_minor_locator(MaxNLocator(nbins=25))
     axes.set_xlabel('Time')
