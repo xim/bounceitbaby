@@ -47,7 +47,7 @@ class GTK(UIGrapher):
 
 class Auto(Grapher):
     def __init__(self):
-        self.outputs = [WX, GTK, PNG]
+        self.outputs = [GTK, WX, PNG]
         self._output = None
 
     def try_inits(self):
