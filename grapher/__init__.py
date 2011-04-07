@@ -28,10 +28,13 @@ class PNG(Grapher):
         sys.exit(1)
 
 class WX(Grapher):
+    def __init__(self):
+        super(WX, self).__init__()
+        import wx_grapher
+        self._grapher = wx_grapher.visualize
     def process_data(self, *args, **kwargs):
         super(WX, self).process_data(*args, **kwargs)
-        logging.critical('WX NOT IMPLEMENTED')
-        sys.exit(1)
+        self._grapher(self._data)
 
 class GTK(Grapher):
     def __init__(self):
