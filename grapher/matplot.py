@@ -31,7 +31,7 @@ def graph(data):
         x0, y0, x1, y1 = float(x0), actors[from_act], float(x1), actors[to_act]
         axes.add_patch(FancyArrowPatch(
                 (x0, y0), (x1, y1), linewidth=1.3,
-                arrowstyle='->, head_width=3, head_length=3'))
+                arrowstyle='->', mutation_scale=20))
 
     axes.autoscale_view()
     lower_y, upper_y = axes.get_ylim()
