@@ -14,7 +14,7 @@ def graph(data):
     axes.xaxis.set_minor_locator(MaxNLocator(nbins=25))
     axes.set_xlabel('Time')
 
-    colors = ('r', 'g', 'b', 'c', 'm', 'k', 'y')
+    colors = ('r', 'g', 'b', 'c', 'm', 'k')
 
     actors = {}
     actor_id = 0
