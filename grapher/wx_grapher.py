@@ -31,7 +31,7 @@ def visualize(data):
 
     win.SetSizer(sizer)
     win.Fit()
-    win.SetSize(wx.Size(500, 400))
+    frame.SetSize(wx.Size(800, 500))
     win.SetScrollbars(20, 20, int(400 / figure.axes[0].get_data_ratio()) / 20, 400 / 20)
 
     frame.Show()
