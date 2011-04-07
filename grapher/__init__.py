@@ -57,7 +57,7 @@ class Auto(Grapher):
                 return
             except ImportError:
                 logging.debug('%s not available for output' % \
-                        type(output).__name__)
+                        output.__name__)
         raise ImportError('Could not find any valid output modules')
 
     def process_data(self, data):
