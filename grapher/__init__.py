@@ -45,14 +45,14 @@ class GTK(Grapher):
         super(GTK, self).process_data(*args, **kwargs)
         self._grapher(self._data)
 
-Auto = GTK
+Auto = WX
 try:
-    import gtk_grapher
+    import wx_grapher
 except ImportError:
-    logging.warning('GTK not available for visualization')
-    Auto = WX
+    logging.warning('wxPython not available for visualization')
+    Auto = GTK
     try:
-        import wxversion
+        import gtk_grapher
     except ImportError:
-        logging.warning('wxPython not available for visualization')
+        logging.warning('GTK not available for visualization')
         Auto = PNG
