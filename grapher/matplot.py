@@ -51,5 +51,6 @@ def graph(data):
 
     # Make the legend, place it automatically...
     axes.legend(loc='best')
+    axes.grid()
 
     return fig
