@@ -1,3 +1,6 @@
-Input Output 0 .75
-Output Input 1.3 1.45
-Input Undef 9.65 10.85
+Input Output 0 .75 Mayonaise
+Output Input 1.3 1.45 Mayonaise
+Input Undef 2.65 2.85 Chili
+Undef Output 3.35 6.85 Chili
+Output Input 7.65 8.85 Mayonaise
+Input Undef 9.65 10.85 Chili

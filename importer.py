@@ -31,9 +31,9 @@ class Foo(BaseRegExReader):
     """
     A test regex based parser.
 
-    Expexts "from to time time", whitespace seperated.
+    Expexts "from to time time sigtype", whitespace seperated.
     """
-    line_fmt = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s*$'
+    line_fmt = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s*$'
 
 class Guess(LogReader):
     """
