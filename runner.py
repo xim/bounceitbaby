@@ -54,20 +54,15 @@ def main():
             format=log_fmt
             )
 
-    for arg in args:
-        if arg == '-':
-            if options.log_parser == 'Guess':
-                logging.critical('Not supported:\n' + \
-                        ' Guessing input format from STDIN')
-                sys.exit(1)
-            arg = '/dev/stdin'
+    for filename in args:
+        if filename == '-':
+            filename = '/dev/stdin'
 
+        log_parser_instance = getattr(importer, options.log_parser)(filename)
         grapher_instance = getattr(grapher, options.graph_output)()
-        log_parser_instance = getattr(importer, options.log_parser)()
-        data = []
-        with open(arg) as input_file:
-            data = log_parser_instance.process_lines(input_file)
-            grapher_instance.process_data(data)
+
+        data = log_parser_instance.process()
+        grapher_instance.process_data(data)
 
 if __name__ == '__main__':
     main()
