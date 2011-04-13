@@ -79,7 +79,7 @@ bug in matplotlib.' % (item.sender, item.recipient, item.sent_time))
     for actor in actors:
         a_id = actors[actor]
         color = colors[a_id % len(actors)]
-        axes.axhline(y=a_id, linewidth=max_actor_id, color=color, label=actor)
+        axes.axhline(y=a_id, linewidth=2, color=color, label=actor)
 
     # Semi-unreadable code making half-guesses for margin size
     xmargin = min(.1, .1 * axes.get_data_ratio())
