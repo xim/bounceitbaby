@@ -1,9 +1,13 @@
 # encoding: utf-8
 
+from collections import namedtuple
 import logging
 import re
 
-LOG_TYPES = ['Guess', 'Foo']
+LOG_TYPES = ['Guess', 'CDpp', 'Foo']
+
+DataItem = namedtuple('DataItem', ['sender', 'recipient', 'sent_time',
+        'rcvd_time', 'msg_type', 'data', 'port_name'])
 
 class LogReader(object):
     """
@@ -59,7 +63,7 @@ class BaseRegExReader(LogReader):
     u"""
     Base class for simple regex line parsers.
 
-    Uses line_fmt and re.match(…).groups()
+    Uses line_fmt and re.match(…).groupdict() to yield DataItem objects
     """
     line_fmt = None
 
@@ -67,7 +71,11 @@ class BaseRegExReader(LogReader):
         for line in self.get_data():
             match = re.match(self.line_fmt, line)
             if match is not None:
-                yield match.groups()
+                kwargs = match.groupdict()
+                for field in DataItem._fields:
+                    if field not in kwargs:
+                        kwargs[field] = None
+                yield DataItem(**kwargs)
 
     def get_aptitude(self):
         hits = 0
@@ -80,9 +88,19 @@ class Foo(BaseRegExReader):
     """
     A test regex based parser.
 
-    Expexts "from to time time sigtype", whitespace seperated.
+    Expexts "from to time time type data", whitespace seperated.
     """
-    line_fmt = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s*$'
+    line_fmt = r'^(?P<sender>\S+)\s+(?P<recipient>\S+)\s+(?P<sent_time>\S+)\s+(?P<rcvd_time>\S+)\s+(?P<msg_type>\S+)\s+(?P<data>\S+)\s*$'
+
+class CDpp(BaseRegExReader):
+    """
+    Regex based parser for CD++ logs
+    """
+    line_fmt = r'^Me(nsaj|ssag)e (?P<msg_type>\S+)\s+/\s+(?P<sent_time>\S+)\s+/\s+(?P<sender>\S+)(\(\S+\))?(\s+/\s+(?P<port_name>\S+))?(\s+/\s+(?P<data>\S+))?\s+(para|to)\s+(?P<recipient>\S+)(\(\S+\))?'
+
+    def get_data(self, *args, **kwargs):
+        for line in super(CDpp, self).get_data(*args, **kwargs):
+            yield re.sub(r'(\d{2}:\d{2}):(\d{3})', r'\1.\2', line)
 
 class Guess(LogReader):
     """
@@ -92,7 +110,7 @@ class Guess(LogReader):
     def __init__(self, *args, **kwargs):
         super(Guess, self).__init__(*args, **kwargs)
         self.reader = None
-        self.candidates = [Foo]
+        self.candidates = [Foo, CDpp]
 
     def __unicode__(self):
         return '<Guess Logreader: %s>' % self.reader

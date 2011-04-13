@@ -1,21 +1,25 @@
 import logging
 
+from matplotlib.dates import DateFormatter, date2num
 from matplotlib.figure import Figure
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.ticker import MaxNLocator
+
+from utils import parse_timestamp
 
 def graph(data):
     """
     The method that makes a matplotlib graph from data.
 
-    Data is a list of tuples. Each tuple:
-    (from, to, time_left, time_recv, sigtype)
-    If you don't have a sigtype, pass e.g. '', '_' or None
+    Data is a list of importer.DataItem objects
     """
 
     fig = Figure(dpi=90, figsize=(25, 1))
     axes = fig.add_axes((.05, .085, .92, .865))
     axes.xaxis.set_minor_locator(MaxNLocator(nbins=25))
+
+    time_format = DateFormatter('%H:%M:%S')
+    axes.xaxis.set_major_formatter(time_format)
     axes.set_xlabel('Time')
 
     colors = ('r', 'g', 'b', 'c', 'm', 'k')
@@ -23,31 +27,45 @@ def graph(data):
             ('wedge', (0, 0, .5)), ('-|>', (.5, 0, 0)), ('->', 'k')]
 
     actors = {}
-    sigtypes = {}
+    msg_types = {}
     max_actor_id = -1
-    for from_act, to_act, x0, x1, sigtype in data:
+    min_xvalue = 999999
+    max_xvalue = 0
+    for item in data:
         # TODO: Is this ugly? Maybe not ugly enough to do something about it?
-        for actor in (from_act, to_act):
+        for actor in (item.recipient, item.sender):
             if not actor in actors:
                 max_actor_id += 1
                 actors[actor] = max_actor_id
 
-        x0, y0, x1, y1 = float(x0), actors[from_act], float(x1), actors[to_act]
+        x0, y0 = item.sent_time, actors[item.sender]
+        x1, y1 = (item.rcvd_time or x0), actors[item.recipient]
 
-        if not sigtype in sigtypes:
-            sigtypes[sigtype] = arrows.pop()
+        if isinstance(x0, basestring):
+            x0 = date2num(parse_timestamp(x0))
+        if isinstance(x1, basestring):
+            x1 = date2num(parse_timestamp(x1))
 
-        arrow, color = sigtypes[sigtype]
+        if x0 < min_xvalue:
+            min_xvalue = x0
+        if x1 > max_xvalue:
+            max_xvalue = x1
+
+        if not item.msg_type in msg_types:
+            msg_types[item.msg_type] = arrows.pop()
+
+        arrow, color = msg_types[item.msg_type]
         axes.add_patch(FancyArrowPatch(
                 (x0, y0), (x1, y1), linewidth=1.3, color=color,
                 arrowstyle=arrow, mutation_scale=20))
 
     axes.autoscale_view()
     axes.set_ybound(lower=-.1 * max_actor_id, upper=max_actor_id + .1 * max_actor_id)
+    x_margin = (max_xvalue - min_xvalue) * .01
+    axes.set_xbound(lower=min_xvalue - x_margin, upper=max_xvalue + x_margin)
 
     axes.yaxis.set_visible(False)
 
-    lower, upper = axes.get_xlim()
     for actor in actors:
         a_id = actors[actor]
         color = colors[a_id % len(actors)]
@@ -60,12 +78,12 @@ def graph(data):
     # Make the legends, place them automatically...
     legend1 = axes.legend(loc='upper left')
     arrows = []
-    if len(sigtypes) > 1:
-        for sigtype, (arrow, color) in sigtypes.iteritems():
+    if len(msg_types) > 1:
+        for _, (arrow, color) in msg_types.iteritems():
             arrows.append(FancyArrowPatch(
                     (x0, y0), (x1, y1), linewidth=1.3, color=color,
                     arrowstyle=arrow, mutation_scale=20))
-        axes.legend(arrows, sigtypes, loc='lower left')
+        axes.legend(arrows, msg_types, loc='lower left')
         axes.add_artist(legend1)
 
     axes.grid()
