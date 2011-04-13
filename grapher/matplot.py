@@ -70,7 +70,6 @@ def graph(data):
 bug in matplotlib.' % (item.sender, item.recipient, item.sent_time))
             pass
 
-    axes.autoscale_view()
     axes.set_ybound(lower=-.1 * max_actor_id, upper=max_actor_id + .1 * max_actor_id)
     x_margin = (max_xvalue - min_xvalue) * .01
     axes.set_xbound(lower=min_xvalue - x_margin, upper=max_xvalue + x_margin)
