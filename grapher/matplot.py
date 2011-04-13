@@ -55,9 +55,20 @@ def graph(data):
             msg_types[item.msg_type] = arrows.pop()
 
         arrow, color = msg_types[item.msg_type]
-        axes.add_patch(FancyArrowPatch(
-                (x0, y0), (x1, y1), linewidth=1.3, color=color,
-                arrowstyle=arrow, mutation_scale=20))
+        logging.debug('Adding arrow from (%s, %s) to (%s, %s)' % (
+                x0, y0, x1, y1))
+        try:
+            axes.add_patch(FancyArrowPatch(
+                    (x0, y0), (x1, y1), linewidth=1.3, color=color,
+                    arrowstyle=arrow, mutation_scale=20))
+        except ValueError:
+            # Occurs when I try to place two identical arrows on top of each
+            # other. TODO: Handle it?
+            # (... some time debugging and searching around on the 'net:)
+            # OMG, it's a bug in matplotlib fixed in r8720/r8721 ?
+            logging.error('Discarding arrow from %s to %s at %s because of a \
+bug in matplotlib.' % (item.sender, item.recipient, item.sent_time))
+            pass
 
     axes.autoscale_view()
     axes.set_ybound(lower=-.1 * max_actor_id, upper=max_actor_id + .1 * max_actor_id)
