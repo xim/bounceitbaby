@@ -29,7 +29,7 @@ def main():
 
     parser.add_option('-d', '--debug',
             action='store_const', dest='loglevel', default=logging.INFO,
-            const=logging.DEBUG, help='set log level to debug')
+            const=logging.DEBUG, help='Set log level to debug')
     parser.add_option('-l', '--log-parser',
             choices=importer.LOG_TYPES,
             default=importer.LOG_TYPES[0],
@@ -38,6 +38,9 @@ def main():
             choices=grapher.GRAPH_TYPES,
             default=grapher.GRAPH_TYPES[0],
             help='Force output module (%s)' % ', '.join(grapher.GRAPH_TYPES))
+    parser.add_option('-n', '--linear',
+            action='store_true', dest='linear', default=False,
+            help='Use linear scale on time axis')
 
     options, args = parser.parse_args()
 
@@ -59,7 +62,7 @@ def main():
             filename = '/dev/stdin'
 
         log_parser_instance = getattr(importer, options.log_parser)(filename)
-        grapher_instance = getattr(grapher, options.graph_output)()
+        grapher_instance = getattr(grapher, options.graph_output)(linear=options.linear)
 
         data = log_parser_instance.process()
         grapher_instance.process_data(data)

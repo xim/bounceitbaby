@@ -13,8 +13,8 @@ class Graph(Figure):
     arrows = [('fancy', (.25, .25, 0)), ('simple', (0, .5, 0)),
             ('wedge', (0, 0, .5)), ('-|>', (.5, 0, 0)), ('->', 'k')]
 
-    def __init__(self, data, is_linear=True):
-        self._is_linear = is_linear
+    def __init__(self, data, linear=True):
+        self._is_linear = linear
 
         super(Graph, self).__init__(dpi=90, figsize=(25, 1))
         self._axes = self.add_axes((.05, .085, .92, .865))
