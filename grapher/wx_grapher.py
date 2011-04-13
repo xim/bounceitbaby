@@ -8,7 +8,7 @@ import logging
 
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 
-from matplot import graph
+from matplot import Graph
 
 def visualize(data):
     """
@@ -19,7 +19,7 @@ def visualize(data):
     frame = wx.Frame(None, -1, 'WX window')
     win = wx.ScrolledWindow(frame, -1)
 
-    figure = graph(data)
+    figure = Graph(data)
     canvas = FigureCanvas(win, -1, figure)
 
     # Basically: If time scale is 20 times longer than number of actors, make
