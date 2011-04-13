@@ -96,7 +96,7 @@ class CDpp(BaseRegExReader):
     """
     Regex based parser for CD++ logs
     """
-    line_fmt = r'^Me(nsaj|ssag)e (?P<msg_type>\S+)\s+/\s+(?P<sent_time>\S+)\s+/\s+(?P<sender>\S+)(\(\S+\))?(\s+/\s+(?P<port_name>\S+))?(\s+/\s+(?P<data>\S+))?\s+(para|to)\s+(?P<recipient>\S+)(\(\S+\))?'
+    line_fmt = r'^Me(nsaj|ssag)e (?P<msg_type>\S+)\s+/\s+(?P<sent_time>\S+)\s+/\s+(?P<sender>\S+?)(\(\S+\))?(\s+/\s+(?P<port_name>\S+))?(\s+/\s+(?P<data>\S+))?\s+(para|to)\s+(?P<recipient>\S+?)(\(\S+\))?'
 
     def get_data(self, *args, **kwargs):
         for line in super(CDpp, self).get_data(*args, **kwargs):
