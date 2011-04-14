@@ -31,6 +31,7 @@ class Graph(Figure):
         self._max_actor_id = -1
         self._min_xvalue = 999999
         self._max_xvalue = 0
+        self._twinticks = []
 
         self.init_axes_parameters()
         self._iterate_data(data)
@@ -79,6 +80,8 @@ class Graph(Figure):
                     (x0, y0), (x1, y1), linewidth=1.3, color=color,
                     arrowstyle=arrow, mutation_scale=20))
 
+            self._twinticks.append((x0, item.msg_type))
+
     def _set_axes_options(self):
         """
         Note: call only after data has been iterated.
@@ -101,16 +104,13 @@ class Graph(Figure):
         self._axes.yaxis.set_ticklabels(self._actors.keys())
 
         # Semi-unreadable code making half-guesses for margin size
-        xmargin = min(.1, .1 * self._axes.get_data_ratio())
-        self._axes.set_position((xmargin + .07, .085, 0.95 - xmargin * 1.8, .865))
-
-        # Make the legends, place them automatically...
-        arrows = []
-        if len(self._msg_types) > 1:
-            for _, (arrow, color) in self._msg_types.iteritems():
-                arrows.append(FancyArrowPatch(
-                        (-1, -1), (-1, -1), linewidth=1.3, color=color,
-                        arrowstyle=arrow, mutation_scale=20))
-            self._axes.legend(arrows, self._msg_types, loc='upper right', bbox_to_anchor=(-.03, 1.02))
+        xmargin = min(.1, .16 * self._axes.get_data_ratio())
+        self._axes.set_position((xmargin, .085, 1 - xmargin * 1.8, .865))
 
         self._axes.grid()
+
+        self._axes2 = self._axes.twiny()
+        xticks, xlabels = zip(*self._twinticks)
+        self._axes2.xaxis.set_ticks(xticks)
+        self._axes2.xaxis.set_ticklabels(xlabels)
+        self._axes2.set_xlim(*self._axes.get_xlim())
