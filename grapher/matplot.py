@@ -22,7 +22,7 @@ class Graph(Figure):
         self._is_linear = linear
         self._coord = XCoordHelper(linear)
 
-        super(Graph, self).__init__(dpi=90, figsize=(25, 1))
+        super(Graph, self).__init__(dpi=90, figsize=(16,6)) # TODO: make figsize auto according to scale!
         self._axes = self.add_axes((.05, .085, .92, .865))
 
         self._arrows = list(self.arrows)
