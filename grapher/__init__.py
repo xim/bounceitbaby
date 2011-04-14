@@ -20,14 +20,21 @@ class ExportFileGrapher(Grapher):
     """
     All graphers that export to a file inherit from here.
     """
+    def __init__(self, *args, **kwargs):
+        self.file_prefix = kwargs.pop('file_prefix', 'out')
+        super(ExportFileGrapher, self).__init__(*args, **kwargs)
 
 class PNG(ExportFileGrapher):
     """
     Save to a PNG file
     """
-    def process_data(self, *args, **kwargs):
-        logging.critical('PNG NOT IMPLEMENTED')
-        sys.exit(1)
+    def __init__(self, *args, **kwargs):
+        super(PNG, self).__init__(*args, **kwargs)
+        import png_grapher
+        self._grapher = png_grapher.save_png_file
+
+    def process_data(self, data):
+        self._grapher(data, file_prefix=self.file_prefix, linear=self._linear_graph)
 
 class UIGrapher(Grapher):
     """
