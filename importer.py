@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 from collections import namedtuple
+from itertools import izip
 import logging
 import re
 
@@ -30,7 +31,7 @@ class LogReader(object):
             for line in self._cache:
                 yield line
         else:
-            for line, _ in zip(self._cache, xrange(num_of_lines)):
+            for line, _ in izip(self._cache, xrange(num_of_lines)):
                 yield line
             if num_of_lines <= len(self._cache):
                 raise StopIteration
