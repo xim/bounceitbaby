@@ -29,13 +29,13 @@ class XCoordHelper(object):
     def _get_coord_nonlinear(self, value=None):
         new_val = self._min_xvalue + self._x_counter
 
-        if self._last_x_label != value:
+        if self._odd:
+            self._x_counter += self._increment
+        elif self._last_x_label != value:
             self._last_x_label = value
             self.labels.append(value)
             self.ticks.append(new_val)
 
-        if self._odd:
-            self._x_counter += self._increment
         self._odd = not self._odd
 
         return new_val
