@@ -107,7 +107,7 @@ class Graph(Figure):
         xmargin = min(.1, .16 * self._axes.get_data_ratio())
         self._axes.set_position((xmargin, .085, 1 - xmargin * 1.8, .865))
 
-        self._axes.grid()
+        self._axes.xaxis.grid()
 
         self._axes2 = self._axes.twiny()
         xticks, xlabels = zip(*self._twinticks)
