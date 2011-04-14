@@ -22,7 +22,8 @@ class Graph(Figure):
         self._is_linear = linear
         self._coord = XCoordHelper(linear)
 
-        super(Graph, self).__init__(dpi=90, figsize=(16,6)) # TODO: make figsize auto according to scale!
+        # Note: later we alter figsize according to scale
+        super(Graph, self).__init__(dpi=90, figsize=(16,6))
         self._axes = self.add_axes((.05, .085, .92, .865))
 
         self._arrows = list(self.arrows)
@@ -116,3 +117,5 @@ class Graph(Figure):
         if not self._is_linear:
             self._axes.xaxis.set_ticks(self._coord.ticks)
             self._axes.xaxis.set_ticklabels(self._coord.labels)
+
+        self.set_figsize_inches((int(7 / self._axes.get_data_ratio()), 7))
