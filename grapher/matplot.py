@@ -15,8 +15,8 @@ class Graph(Figure):
     # matplotlib r8720/r8721 I think.
     # For all the possible arrow styles:
     # http://matplotlib.sourceforge.net/plot_directive/mpl_examples/pylab_examples/fancyarrow_demo.hires.png
-    arrows = [('->', (.25, .25, 0)), ('fancy', (0, .5, 0)),
-            ('wedge', (0, 0, .5)), ('-|>', (.5, 0, 0)), ('->', 'k')]
+    arrows = [('wedge', (.25, .25, 0)), ('->', (0, .5, 0)), ('->', (0, 0, .5)),
+            ('-|>', (.5, 0, 0)), ('fancy', 'k')]
 
     def __init__(self, data, linear=False):
         self._is_linear = linear
