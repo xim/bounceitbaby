@@ -1,20 +1,25 @@
 import logging
 
-from matplotlib.dates import DateFormatter, date2num
+from matplotlib.dates import DateFormatter
 from matplotlib.figure import Figure
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.ticker import MaxNLocator, MultipleLocator
 
-from utils import parse_timestamp
+from utils import XCoordHelper
 
 class Graph(Figure):
 
     colors = ('r', 'g', 'b', 'c', 'm', 'k')
-    arrows = [('fancy', (.25, .25, 0)), ('simple', (0, .5, 0)),
+    # TODO: The arrow 'simple' makes the library die. A bug. Fixed in
+    # matplotlib r8720/r8721 I think.
+    # For all the possible arrow styles:
+    # http://matplotlib.sourceforge.net/plot_directive/mpl_examples/pylab_examples/fancyarrow_demo.hires.png
+    arrows = [('->', (.25, .25, 0)), ('fancy', (0, .5, 0)),
             ('wedge', (0, 0, .5)), ('-|>', (.5, 0, 0)), ('->', 'k')]
 
-    def __init__(self, data, linear=True):
+    def __init__(self, data, linear=False):
         self._is_linear = linear
+        self._coord = XCoordHelper(linear)
 
         super(Graph, self).__init__(dpi=90, figsize=(25, 1))
         self._axes = self.add_axes((.05, .085, .92, .865))
@@ -33,10 +38,8 @@ class Graph(Figure):
     def init_axes_parameters(self):
         if self._is_linear:
             self._axes.xaxis.set_minor_locator(MaxNLocator(nbins=25))
-        else:
-            self._axes.xaxis.set_major_locator(MultipleLocator())
-        time_format = DateFormatter('%H:%M:%S')
-        self._axes.xaxis.set_major_formatter(time_format)
+            time_format = DateFormatter('%H:%M:%S')
+            self._axes.xaxis.set_major_formatter(time_format)
         self._axes.set_xlabel('Time')
 
     def _iterate_data(self, data):
@@ -50,10 +53,8 @@ class Graph(Figure):
             x0, y0 = item.sent_time, self._actors[item.sender]
             x1, y1 = (item.rcvd_time or x0), self._actors[item.recipient]
 
-            if isinstance(x0, basestring):
-                x0 = date2num(parse_timestamp(x0))
-            if isinstance(x1, basestring):
-                x1 = date2num(parse_timestamp(x1))
+            x0 = self._coord(x0)
+            x1 = self._coord(x1)
 
             if x0 < self._min_xvalue:
                 self._min_xvalue = x0
@@ -66,18 +67,9 @@ class Graph(Figure):
             arrow, color = self._msg_types[item.msg_type]
             logging.debug('Adding arrow from (%s, %s) to (%s, %s)' % (
                     x0, y0, x1, y1))
-            try:
-                self._axes.add_patch(FancyArrowPatch(
-                        (x0, y0), (x1, y1), linewidth=1.3, color=color,
-                        arrowstyle=arrow, mutation_scale=20))
-            except ValueError:
-                # Occurs when I try to place two identical arrows on top of each
-                # other. TODO: Handle it?
-                # (... some time debugging and searching around on the 'net:)
-                # OMG, it's a bug in matplotlib fixed in r8720/r8721 ?
-                logging.error('Discarding arrow from %s to %s at %s because of a \
-    bug in matplotlib.' % (item.sender, item.recipient, item.sent_time))
-                pass
+            self._axes.add_patch(FancyArrowPatch(
+                    (x0, y0), (x1, y1), linewidth=1.3, color=color,
+                    arrowstyle=arrow, mutation_scale=20))
 
     def _set_axes_options(self):
         """
@@ -95,19 +87,22 @@ class Graph(Figure):
             color = self.colors[a_id % len(self._actors)]
             self._axes.axhline(y=a_id, linewidth=2, color=color, label=actor)
 
+        self._axes.xaxis.set_ticks(self._coord.ticks)
+        self._axes.xaxis.set_ticklabels(self._coord.labels)
+
         # Semi-unreadable code making half-guesses for margin size
         xmargin = min(.1, .1 * self._axes.get_data_ratio())
-        self._axes.set_position((xmargin, .085, 1.0 - xmargin * 1.8, .865))
+        self._axes.set_position((xmargin + .07, .085, 0.95 - xmargin * 1.8, .865))
 
         # Make the legends, place them automatically...
-        legend1 = self._axes.legend(loc='upper left')
+        legend1 = self._axes.legend(loc='upper right', bbox_to_anchor=(0, 1))
         arrows = []
         if len(self._msg_types) > 1:
             for _, (arrow, color) in self._msg_types.iteritems():
                 arrows.append(FancyArrowPatch(
                         (-1, -1), (-1, -1), linewidth=1.3, color=color,
                         arrowstyle=arrow, mutation_scale=20))
-            self._axes.legend(arrows, self._msg_types, loc='lower left')
+            self._axes.legend(arrows, self._msg_types, loc='lower right', bbox_to_anchor=(0, 0))
             self._axes.add_artist(legend1)
 
         self._axes.grid()
