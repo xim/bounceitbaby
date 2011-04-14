@@ -3,6 +3,7 @@ import logging
 from matplotlib.dates import DateFormatter
 from matplotlib.figure import Figure
 from matplotlib.patches import FancyArrowPatch
+from matplotlib.text import Text
 from matplotlib.ticker import MaxNLocator, MultipleLocator
 
 from utils import XCoordHelper
@@ -67,6 +68,13 @@ class Graph(Figure):
             arrow, color = self._msg_types[item.msg_type]
             logging.debug('Adding arrow from (%s, %s) to (%s, %s)' % (
                     x0, y0, x1, y1))
+
+            x_mid, y_mid = (x0 + x1) / 2., (y0 + y1) / 2.
+            if item.port_name:
+                self._axes.add_artist(Text(x_mid - .2, y_mid, item.port_name, rotation='vertical', verticalalignment='center', horizontalalignment='center'))
+            if item.data:
+                self._axes.add_artist(Text(x_mid + .2, y_mid, item.data, rotation='vertical', verticalalignment='center', horizontalalignment='center'))
+
             self._axes.add_patch(FancyArrowPatch(
                     (x0, y0), (x1, y1), linewidth=1.3, color=color,
                     arrowstyle=arrow, mutation_scale=20))
@@ -80,7 +88,7 @@ class Graph(Figure):
         x_margin = (self._max_xvalue - self._min_xvalue) * .01
         self._axes.set_xbound(lower=self._min_xvalue - x_margin, upper=self._max_xvalue + x_margin)
 
-        self._axes.yaxis.set_visible(False)
+        #self._axes.yaxis.set_visible(False)
 
         for actor in self._actors:
             a_id = self._actors[actor]
@@ -89,20 +97,20 @@ class Graph(Figure):
 
         self._axes.xaxis.set_ticks(self._coord.ticks)
         self._axes.xaxis.set_ticklabels(self._coord.labels)
+        self._axes.yaxis.set_ticks(self._actors.values())
+        self._axes.yaxis.set_ticklabels(self._actors.keys())
 
         # Semi-unreadable code making half-guesses for margin size
         xmargin = min(.1, .1 * self._axes.get_data_ratio())
         self._axes.set_position((xmargin + .07, .085, 0.95 - xmargin * 1.8, .865))
 
         # Make the legends, place them automatically...
-        legend1 = self._axes.legend(loc='upper right', bbox_to_anchor=(0, 1))
         arrows = []
         if len(self._msg_types) > 1:
             for _, (arrow, color) in self._msg_types.iteritems():
                 arrows.append(FancyArrowPatch(
                         (-1, -1), (-1, -1), linewidth=1.3, color=color,
                         arrowstyle=arrow, mutation_scale=20))
-            self._axes.legend(arrows, self._msg_types, loc='lower right', bbox_to_anchor=(0, 0))
-            self._axes.add_artist(legend1)
+            self._axes.legend(arrows, self._msg_types, loc='upper right', bbox_to_anchor=(-.03, 1.02))
 
         self._axes.grid()
