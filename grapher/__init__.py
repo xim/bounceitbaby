@@ -1,7 +1,7 @@
 import logging
 import sys
 
-GRAPH_TYPES = ['Auto', 'WX', 'PNG', 'GTK']
+GRAPH_TYPES = ['Auto', 'GTK', 'WX', 'File']
 
 class Grapher(object):
     """
