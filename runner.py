@@ -14,6 +14,7 @@ Examples:
 """
 
 from optparse import OptionParser
+from itertools import count
 import logging
 import sys
 
@@ -65,14 +66,18 @@ def main():
             format=log_fmt
             )
 
-    for filename in args:
+    for filename, index in zip(args, count(1)):
         if filename == '-':
             filename = '/dev/stdin'
 
+        out_file = options.output_file
+        if len(args) > 1:
+            out_file = out_file.split('.')
+            out_file = "%s_%d.%s" % (out_file[0], index, out_file[1])
         log_parser_instance = getattr(importer, options.log_parser)(filename)
         grapher_instance = getattr(grapher, options.graph_output)(
                 linear=options.linear,
-                output_file=options.output_file)
+                output_file=out_file)
 
         data = log_parser_instance.process()
         grapher_instance.process_data(data)
