@@ -98,11 +98,6 @@ class Graph(Figure):
             color = self.colors[a_id % len(self._actors)]
             self._axes.axhline(y=a_id, linewidth=2, color=color, label=actor)
 
-        self._axes.xaxis.set_ticks(self._coord.ticks)
-        self._axes.xaxis.set_ticklabels(self._coord.labels)
-        self._axes.yaxis.set_ticks(self._actors.values())
-        self._axes.yaxis.set_ticklabels(self._actors.keys())
-
         # Semi-unreadable code making half-guesses for margin size
         xmargin = min(.1, .16 * self._axes.get_data_ratio())
         self._axes.set_position((xmargin, .085, 1 - xmargin * 1.8, .865))
@@ -114,3 +109,10 @@ class Graph(Figure):
         self._axes2.xaxis.set_ticks(xticks)
         self._axes2.xaxis.set_ticklabels(xlabels)
         self._axes2.set_xlim(*self._axes.get_xlim())
+
+        self._axes.yaxis.set_ticks(self._actors.values())
+        self._axes.yaxis.set_ticklabels(self._actors.keys())
+
+        if not self._is_linear:
+            self._axes.xaxis.set_ticks(self._coord.ticks)
+            self._axes.xaxis.set_ticklabels(self._coord.labels)
