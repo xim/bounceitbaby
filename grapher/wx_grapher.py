@@ -16,7 +16,7 @@ def visualize(data, linear=False):
     """
 
     app = wx.App()
-    frame = wx.Frame(None, -1, 'WX window')
+    frame = wx.Frame(None, -1, 'BounceItBaby visualizer')
     win = wx.ScrolledWindow(frame, -1)
 
     figure = Graph(data, linear=linear)

@@ -15,9 +15,9 @@ def visualize(data, linear=False):
     """
 
     win = gtk.Window()
-    win.connect("destroy", lambda x: gtk.main_quit())
+    win.connect('destroy', lambda x: gtk.main_quit())
     win.set_default_size(800,500)
-    win.set_title("GTK window")
+    win.set_title('BounceItBaby visualizer')
 
     sw = gtk.ScrolledWindow()
     win.add(sw)
