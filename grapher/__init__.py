@@ -9,7 +9,7 @@ class Grapher(object):
 
     Which currently is nothing.
     """
-    def __init__(self, linear=False, output_file='out.file'):
+    def __init__(self, linear=False, output_file='out.png'):
         """
         __init__ of Grapher classes should throw ImportError if a needed
         library is missing.
