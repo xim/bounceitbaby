@@ -27,6 +27,11 @@ def main():
 
     parser = OptionParser(usage=__doc__)
 
+    def filename_callback(option, opt_str, value, parser):
+        print option, opt_str, value, parser
+        setattr(parser.values, option.dest, value)
+        parser.values.graph_output = 'File'
+
     parser.add_option('-d', '--debug',
             action='store_const', dest='loglevel', default=logging.INFO,
             const=logging.DEBUG, help='Set log level to debug')
@@ -38,6 +43,10 @@ def main():
             choices=grapher.GRAPH_TYPES,
             default=grapher.GRAPH_TYPES[0],
             help='Force output module (%s)' % ', '.join(grapher.GRAPH_TYPES))
+    parser.add_option('-f', '--output-file', action='callback',
+            callback=filename_callback, dest="output_file", type="string",
+            default="out.png", help='Set output filename. This also ' \
+                    + 'overrides the output module to "File"')
     parser.add_option('-n', '--linear',
             action='store_true', dest='linear', default=False,
             help='Use linear scale on time axis')
