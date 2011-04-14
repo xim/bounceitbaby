@@ -19,7 +19,8 @@ class Grapher(object):
 
 class File(Grapher):
     """
-    Save to a graphics file
+    Save to a graphics file.
+    kwargs inherited from Grapher.
     """
     def __init__(self, *args, **kwargs):
         super(File, self).__init__(*args, **kwargs)
@@ -58,6 +59,7 @@ class Auto(Grapher):
 
     def try_inits(self):
         for output in self.outputs:
+            logging.debug('Auto grapher trying to load %s for graph' % output)
             try:
                 self._output = output(*self._args, **self._kwargs)
                 return

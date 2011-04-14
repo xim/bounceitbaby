@@ -67,19 +67,24 @@ def main():
             )
 
     for filename, index in zip(args, count(1)):
+        # For each file, run the selected parser/grapher pair
         if filename == '-':
             filename = '/dev/stdin'
 
+        # Make sure files don't overwrite each other from this process.
         out_file = options.output_file
         if len(args) > 1:
             out_file = out_file.split('.')
             out_file = "%s_%d.%s" % (out_file[0], index, out_file[1])
+
         log_parser_instance = getattr(importer, options.log_parser)(filename)
         grapher_instance = getattr(grapher, options.graph_output)(
                 linear=options.linear,
                 output_file=out_file)
 
         data = log_parser_instance.process()
+        # TODO: This blocks the interface on multiple files for GUI
+        # visualization. Concider forking new processes?
         grapher_instance.process_data(data)
 
 if __name__ == '__main__':
