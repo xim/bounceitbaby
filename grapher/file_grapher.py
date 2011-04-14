@@ -1,3 +1,5 @@
+import logging
+
 from matplot import Graph
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -9,4 +11,5 @@ def save_file(data, linear=False, output_file='out.png'):
     # object so it knows how to save to file.
     canvas = FigureCanvas(figure)
 
-    figure.savefig(filename=output_file)
+    logging.info('Saving figure to %s' % output_file)
+    figure.savefig(filename=output_file, facecolor='.75')
