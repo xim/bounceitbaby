@@ -21,10 +21,10 @@ import sys
 import importer, grapher
 
 def main():
-    '''
+    """
     Method run when starting from command line.
     Does not get run if importing as a python module.
-    '''
+    """
 
     parser = OptionParser(usage=__doc__)
 
