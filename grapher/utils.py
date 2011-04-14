@@ -5,7 +5,7 @@ def parse_timestamp(timestamp):
     return date2num(parse(timestamp))
 
 class XCoordHelper(object):
-    def __init__(self, linear=False, min_xvalue=0, increment=.5):
+    def __init__(self, linear=False, min_xvalue=0, increment=.7):
         if linear:
             self._get_coord = self._get_coord_linear
         else:
