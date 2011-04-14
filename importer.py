@@ -120,7 +120,7 @@ class Guess(LogReader):
         logging.debug('Guessing log reader')
         if not self.reader is None:
             return
-        self.candidates = [reader(self._filehandle) \
+        self.candidates = [reader(self._filename) \
                 for reader in self.candidates]
         for line in self.get_data():
             pass
