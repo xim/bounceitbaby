@@ -28,7 +28,6 @@ def main():
     parser = OptionParser(usage=__doc__)
 
     def filename_callback(option, opt_str, value, parser):
-        print option, opt_str, value, parser
         setattr(parser.values, option.dest, value)
         parser.values.graph_output = 'File'
 
