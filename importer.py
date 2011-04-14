@@ -16,6 +16,7 @@ class LogReader(object):
     """
 
     def __init__(self, filename):
+        logging.debug('Init: %s for file %s' % (self, filename))
         self._filename = filename
         self._cache = []
         self._filehandle = None
@@ -23,10 +24,13 @@ class LogReader(object):
 
     def get_data(self, num_of_lines=None):
         """
-        Magic class that ensures data is cached. Allows fetching the first n
-        lines of a file.
+        Magic methos that ensures data is cached. Allows fetching the first n
+        lines of a file as well.
         """
 
+        if self._cache:
+            logging.debug('%s reading data for %s from cache' % (self,
+                    self._filename))
         if num_of_lines is None:
             for line in self._cache:
                 yield line
@@ -37,6 +41,7 @@ class LogReader(object):
                 raise StopIteration
 
         if self._done:
+            logging.debug('No more lines, no need to open file')
             raise StopIteration
         logging.debug('%s reading %s' % (self, self._filename))
         if self._filehandle is None:
@@ -49,6 +54,7 @@ class LogReader(object):
                 self._cache.append(line)
                 yield line
             except StopIteration:
+                logging.debug('We hit EOF. Closing %s' % self._filename)
                 self._filehandle.close()
                 self._done = True
                 break
@@ -95,11 +101,15 @@ class Foo(BaseRegExReader):
 
 class CDpp(BaseRegExReader):
     """
-    Regex based parser for CD++ logs
+    Regex based parser for CD++ logs.
+    These log files are ugly, thus my regex is as well.
     """
     line_fmt = r'^Me(nsaj|ssag)e (?P<msg_type>\S+)\s+/\s+(?P<sent_time>\S+)\s+/\s+(?P<sender>\S+?)(\(\S+\))?(\s+/\s+(?P<port_name>\S+))??(\s+/\s+(?P<data>\S+))?\s+(para|to)\s+(?P<recipient>\S+?)(\(\S+\))?\s*$'
 
     def get_data(self, *args, **kwargs):
+        u"""
+        Overridden to fix timestamp data from format mm:ss:µµµ to mm:ss.µµµ
+        """
         for line in super(CDpp, self).get_data(*args, **kwargs):
             yield re.sub(r'(\d{2}:\d{2}):(\d{3})', r'\1.\2', line)
 
@@ -117,7 +127,6 @@ class Guess(LogReader):
         return '<Guess Logreader: %s>' % self.reader
 
     def guess_reader(self):
-        logging.debug('Guessing log reader')
         if not self.reader is None:
             return
         self.candidates = [reader(self._filename) \
@@ -129,7 +138,8 @@ class Guess(LogReader):
             reader._done = True
         aptitudes = [(reader, reader.get_aptitude()) \
                 for reader in self.candidates]
-        logging.debug('Aptitudes: %s' % repr(aptitudes))
+        logging.debug('%s: List of log readers and their aptitudes: %s' % \
+                (self, repr(aptitudes)))
         self.reader = sorted(aptitudes, lambda x,y: x[1] - y[1])[-1][0]
         self.candidates = []
 
