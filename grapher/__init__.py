@@ -9,32 +9,26 @@ class Grapher(object):
 
     Which currently is nothing.
     """
-    def __init__(self, linear=False):
+    def __init__(self, linear=False, output_file='out.file'):
         """
         __init__ of Grapher classes should throw ImportError if a needed
         library is missing.
         """
         self._linear_graph = linear
+        self._outout_file = output_file
 
-class ExportFileGrapher(Grapher):
+class File(Grapher):
     """
-    All graphers that export to a file inherit from here.
+    Save to a graphics file
     """
     def __init__(self, *args, **kwargs):
-        self.file_prefix = kwargs.pop('file_prefix', 'out')
-        super(ExportFileGrapher, self).__init__(*args, **kwargs)
-
-class PNG(ExportFileGrapher):
-    """
-    Save to a PNG file
-    """
-    def __init__(self, *args, **kwargs):
-        super(PNG, self).__init__(*args, **kwargs)
-        import png_grapher
-        self._grapher = png_grapher.save_png_file
+        super(File, self).__init__(*args, **kwargs)
+        import file_grapher
+        self._grapher = file_grapher.save_file
 
     def process_data(self, data):
-        self._grapher(data, file_prefix=self.file_prefix, linear=self._linear_graph)
+        self._grapher(data, output_file=self._outout_file,
+                linear=self._linear_graph)
 
 class UIGrapher(Grapher):
     """
@@ -59,7 +53,7 @@ class Auto(Grapher):
     def __init__(self, *args, **kwargs):
         self._args = args
         self._kwargs = kwargs
-        self.outputs = [GTK, WX, PNG]
+        self.outputs = [GTK, WX, File]
         self._output = None
 
     def try_inits(self):

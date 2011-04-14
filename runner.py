@@ -71,7 +71,9 @@ def main():
             filename = '/dev/stdin'
 
         log_parser_instance = getattr(importer, options.log_parser)(filename)
-        grapher_instance = getattr(grapher, options.graph_output)(linear=options.linear)
+        grapher_instance = getattr(grapher, options.graph_output)(
+                linear=options.linear,
+                output_file=options.output_file)
 
         data = log_parser_instance.process()
         grapher_instance.process_data(data)
