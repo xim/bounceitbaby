@@ -22,6 +22,7 @@ def visualize(data, linear=False):
 
     sw = gtk.ScrolledWindow()
     win.add(sw)
+    # TODO: allow arrow/hjkl buttons to scroll
     sw.set_policy(hscrollbar_policy=gtk.POLICY_ALWAYS,
                   vscrollbar_policy=gtk.POLICY_AUTOMATIC)
 

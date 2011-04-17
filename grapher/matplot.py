@@ -81,6 +81,7 @@ class Graph(Figure):
             # TODO: Rotate by degree if this was linear. The arrow should know
             # its own rotation, right?
             if item.port_name:
+                # TODO: Make the distance relative to the hight of the graph?
                 self._axes.add_artist(Text(x_mid - .1, y_mid, item.port_name,
                     rotation='vertical', verticalalignment='center',
                     horizontalalignment='center'))

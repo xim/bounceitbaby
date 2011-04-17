@@ -34,6 +34,7 @@ def visualize(data, linear=False):
     win.SetSizer(sizer)
     win.Fit()
     frame.SetSize(wx.Size(800, 500))
+    # TODO: allow arrow/hjkl buttons to scroll
     win.SetScrollbars(20, 20, int(400 / figure.axes[0].get_data_ratio()) / 20, 400 / 20)
 
     logging.debug('Displaying WX window')
