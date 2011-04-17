@@ -55,7 +55,6 @@ class Graph(Figure):
             for actor in (item.recipient, item.sender):
                 if not actor in self._actors:
                     self._actors[actor] = len(self._actors)
-            print item
 
             # Extract x and y values into names that make more sense graph-wize
             x0, y0 = item.sent_time, self._actors[item.sender]
