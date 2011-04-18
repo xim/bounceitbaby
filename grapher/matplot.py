@@ -1,11 +1,10 @@
-import logging
-
 from matplotlib.dates import DateFormatter
 from matplotlib.figure import Figure
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.text import Text
 from matplotlib.ticker import MaxNLocator, MultipleLocator
 
+from logging_helper import logger
 from utils import XCoordHelper
 
 class Graph(Figure):
@@ -40,13 +39,13 @@ class Graph(Figure):
         self._msgtype_labels = []
 
         # Call all functions on the object, in natural order.
-        logging.debug('Iterating %s in %s (linear: %s)' % (data, self, linear))
+        logger.debug('Iterating %s in %s (linear: %s)' % (data, self, linear))
         self._iterate_data(data)
-        logging.debug('Setting graph parameters')
+        logger.debug('Setting graph parameters')
         self._add_actors()
         self._set_axes_options()
         self._set_tick_parameters()
-        logging.debug('%s seems to have exited successfully' % self)
+        logger.debug('%s seems to have exited successfully' % self)
 
     def _iterate_data(self, data):
         for item in data:

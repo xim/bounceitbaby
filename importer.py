@@ -2,8 +2,9 @@
 
 from collections import namedtuple
 from itertools import izip
-import logging
 import re
+
+from logging_helper import logger
 
 LOG_TYPES = ['Guess', 'CDpp', 'Foo']
 
@@ -16,7 +17,7 @@ class LogReader(object):
     """
 
     def __init__(self, filename):
-        logging.debug('Init: %s for file %s' % (self, filename))
+        logger.debug('Init: %s for file %s' % (self, filename))
         self._filename = filename
         self._cache = []
         self._filehandle = None
@@ -29,7 +30,7 @@ class LogReader(object):
         """
 
         if self._cache:
-            logging.debug('%s reading data for %s from cache' % (self,
+            logger.debug('%s reading data for %s from cache' % (self,
                     self._filename))
         if num_of_lines is None:
             for line in self._cache:
@@ -41,9 +42,9 @@ class LogReader(object):
                 raise StopIteration
 
         if self._done:
-            logging.debug('No more lines, no need to open file')
+            logger.debug('No more lines, no need to open file')
             raise StopIteration
-        logging.debug('%s reading %s' % (self, self._filename))
+        logger.debug('%s reading %s' % (self, self._filename))
         if self._filehandle is None:
             self._filehandle = open(self._filename)
         line_number = len(self._cache)
@@ -54,7 +55,7 @@ class LogReader(object):
                 self._cache.append(line)
                 yield line
             except StopIteration:
-                logging.debug('We hit EOF. Closing %s' % self._filename)
+                logger.debug('We hit EOF. Closing %s' % self._filename)
                 self._filehandle.close()
                 self._done = True
                 break
@@ -136,7 +137,7 @@ class Guess(LogReader):
             reader._done = True
         aptitudes = [(reader, reader.get_aptitude()) \
                 for reader in self.candidates]
-        logging.debug('%s: List of log readers and their aptitudes: %s' % \
+        logger.debug('%s: List of log readers and their aptitudes: %s' % \
                 (self, repr(aptitudes)))
         self.reader = sorted(aptitudes, lambda x,y: x[1] - y[1])[-1][0]
         self.candidates = []

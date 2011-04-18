@@ -4,23 +4,24 @@ FigureCanvasWxAgg widget in a wx.ScrolledWindow
 """
 
 import wx
-import logging
 
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 
 from matplot import Graph
+
+from logging_helper import logger
 
 def visualize(data, linear=False):
     """
     The method that does all magic to to with WX.
     """
 
-    logging.debug('Spawning a WX interface')
+    logger.debug('Spawning a WX interface')
     app = wx.App()
     frame = wx.Frame(None, -1, 'BounceItBaby visualizer')
     win = wx.ScrolledWindow(frame, -1)
 
-    logging.debug('Creating a Figure object from data')
+    logger.debug('Creating a Figure object from data')
     figure = Graph(data, linear=linear)
     canvas = FigureCanvas(win, -1, figure)
 
@@ -37,6 +38,6 @@ def visualize(data, linear=False):
     # TODO: allow arrow/hjkl buttons to scroll
     win.SetScrollbars(20, 20, int(400 / figure.axes[0].get_data_ratio()) / 20, 400 / 20)
 
-    logging.debug('Displaying WX window')
+    logger.debug('Displaying WX window')
     frame.Show()
     app.MainLoop()
