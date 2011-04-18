@@ -1,3 +1,5 @@
+from itertools import cycle
+
 from matplotlib.dates import DateFormatter
 from matplotlib.figure import Figure
 from matplotlib.patches import FancyArrowPatch
@@ -27,8 +29,8 @@ class Graph(Figure):
         self._axes = self.add_axes((.05, .085, .92, .865))
 
         # ... Wow, we do a lot of manual housekeeping!
-        # Keep a copy of the arrows so we can pop() for it.
-        self._arrows = list(self.arrows)
+        # Make the arrows infinitely reusable.
+        self._arrows = cycle(self.arrows)
         # Remember all the actors we see.
         self._actors = {}
         # Remember all distinct message types.
@@ -65,7 +67,7 @@ class Graph(Figure):
 
             # If the message type hasn't been seen before, assign a style
             if not item.msg_type in self._msg_types:
-                self._msg_types[item.msg_type] = self._arrows.pop()
+                self._msg_types[item.msg_type] = self._arrows.next()
 
             # Make the arrow
             self._make_arrow(item, x0, y0, x1, y1)
@@ -97,7 +99,7 @@ class Graph(Figure):
         # Add the horizontal lines we want for each actor
         for actor in self._actors:
             a_id = self._actors[actor]
-            color = self.colors[a_id % len(self._actors)]
+            color = self.colors[a_id % len(self.colors)]
             self._axes.axhline(y=a_id, linewidth=2, color=color, label=actor)
 
     def _set_axes_options(self):
