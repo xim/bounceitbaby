@@ -124,7 +124,7 @@ class Graph(Figure):
 
         # Set the figure size, this influences the file export.
         # TODO: 7 in * 90 px/in = 630 px. Maybe allow the user to set size?
-        self.set_figsize_inches((int(7 / self._axes.get_data_ratio()), 7))
+        self.set_size_inches((int(7 / self._axes.get_data_ratio()), 7))
 
     def _set_tick_parameters(self):
         if self._is_linear:
