@@ -16,12 +16,16 @@ class LogReader(object):
     Base class of all log readers.
     """
 
-    def __init__(self, filename):
+    def __init__(self, filename, filehandle=None):
         logger.debug('Init: %s for file %s' % (self, filename))
-        self._filename = filename
+
+        self._filename = str(filename)
         self._cache = []
-        self._filehandle = None
         self._done = False
+
+        if filehandle is not None:
+            filehandle.seek(0)
+        self._filehandle = filehandle
 
     def get_data(self, num_of_lines=None):
         """
