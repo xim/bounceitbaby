@@ -20,4 +20,4 @@ def save_file(data, linear=False, output_file='out.png'):
 
     logging.info('Saving figure to %s' % output_file)
     figure.savefig(filename=output_file, facecolor='.75')
-    logging.info(u'… done!' % output_file)
+    logging.info(u'… %s done!' % output_file)
