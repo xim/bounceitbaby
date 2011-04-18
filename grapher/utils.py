@@ -15,10 +15,7 @@ class XCoordHelper(object):
         """
         min_xvalue and increment are discarded if linear=True
         """
-        if linear:
-            self.get_coord = self._get_coord_linear
-        else:
-            self.get_coord = self._get_coord_nonlinear
+        self._linear = linear
         self._odd = False
         self._max_xvalue = 0
         self._last_x_label = None
@@ -27,12 +24,16 @@ class XCoordHelper(object):
         self.labels = []
         self.ticks = []
 
-    def __call__(self, *args):
+    def get_coord(self, *args):
         """
-        Callable for convenience. Calls self.get_coord (which again calls
-        _get_coord_{non,}linear).
+        Return a numerical value for the placement of a value in X on a graph.
         """
-        return self.get_coord(*args)
+        if self._linear:
+            return self._get_coord_linear(*args)
+        else:
+            return self._get_coord_nonlinear(*args)
+
+    __call__ = get_coord
 
     @property
     def min_xvalue(self):
@@ -40,6 +41,8 @@ class XCoordHelper(object):
 
     @property
     def max_xvalue(self):
+        if self._linear:
+            return self._max_xvalue
         return self._max_xvalue - self._increment
 
     @property
