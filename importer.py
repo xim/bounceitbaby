@@ -78,10 +78,8 @@ class BaseRegExReader(LogReader):
         for line in self.get_data():
             match = re.match(self.line_fmt, line)
             if match is not None:
-                kwargs = match.groupdict()
-                for field in DataItem._fields:
-                    if field not in kwargs:
-                        kwargs[field] = None
+                kwargs = dict((field, None) for field in DataItem._fields)
+                kwargs.update(match.groupdict())
                 yield DataItem(**kwargs)
 
     def get_aptitude(self):
