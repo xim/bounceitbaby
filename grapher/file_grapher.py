@@ -6,7 +6,9 @@ from matplot import Graph
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
-from logging_helper import logger
+import logging
+
+logger = logging.getLogger('bounceitbaby')
 
 def _build_figure(data, linear=False):
     logger.debug('Building Figure from data')

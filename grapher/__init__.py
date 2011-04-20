@@ -1,6 +1,8 @@
 import sys
 
-from logging_helper import logger
+import logging
+
+logger = logging.getLogger('bounceitbaby')
 
 GRAPH_TYPES = ['Auto', 'GTK', 'WX', 'File']
 

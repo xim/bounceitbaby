@@ -7,7 +7,9 @@ from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanva
 
 from matplot import Graph
 
-from logging_helper import logger
+import logging
+
+logger = logging.getLogger('bounceitbaby')
 
 def visualize(data, linear=False):
     """

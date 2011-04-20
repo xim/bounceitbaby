@@ -6,8 +6,11 @@ from matplotlib.patches import FancyArrowPatch
 from matplotlib.text import Text
 from matplotlib.ticker import MaxNLocator, MultipleLocator
 
-from logging_helper import logger
 from utils import XCoordHelper
+
+import logging
+
+logger = logging.getLogger('bounceitbaby')
 
 class Graph(Figure):
 

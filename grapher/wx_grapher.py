@@ -9,7 +9,9 @@ from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 
 from matplot import Graph
 
-from logging_helper import logger
+import logging
+
+logger = logging.getLogger('bounceitbaby')
 
 def visualize(data, linear=False):
     """

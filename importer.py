@@ -4,7 +4,9 @@ from collections import namedtuple
 from itertools import izip
 import re
 
-from logging_helper import logger
+import logging
+
+logger = logging.getLogger('bounceitbaby')
 
 LOG_TYPES = ['Guess', 'CDpp', 'Foo']
 
