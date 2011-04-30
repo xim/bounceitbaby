@@ -25,7 +25,7 @@ class Graph(Figure):
     def __init__(self, data, actors, linear=False):
         self._actors = dict(zip(actors, count()))
         self._is_linear = linear
-        self._coord = XCoordHelper(linear)
+        self._coord = XCoordHelper(linear, increment=len(actors)/10.)
 
         # Note: later we alter figsize according to scale. All numbers here are
         # guesses and not really used later.
@@ -78,13 +78,14 @@ class Graph(Figure):
             # And add text if there was any
             # TODO: Rotate by degree if this was linear. The arrow should know
             # its own rotation, right?
+            offset = self._coord._increment / 4.
             if item.port_name:
                 # TODO: Make the distance relative to the hight of the graph?
-                self._axes.add_artist(Text(x_mid - .1, y_mid, item.port_name,
+                self._axes.add_artist(Text(x_mid - offset, y_mid, item.port_name,
                     rotation='vertical', verticalalignment='center',
                     horizontalalignment='center'))
             if item.data:
-                self._axes.add_artist(Text(x_mid + .1, y_mid, item.data,
+                self._axes.add_artist(Text(x_mid + offset, y_mid, item.data,
                     rotation='vertical', verticalalignment='center',
                     horizontalalignment='center'))
 
@@ -107,7 +108,7 @@ class Graph(Figure):
         max_actor_y = len(self._actors) - 1
         y_margin = .1 * max_actor_y
         self._axes.set_ybound(lower=-y_margin, upper=max_actor_y + y_margin)
-        x_margin = self._coord.x_range * .01
+        x_margin = self._coord._increment / 2.
         self._axes.set_xbound(lower=self._coord.min_xvalue - x_margin,
                 upper=self._coord.max_xvalue + x_margin)
 
