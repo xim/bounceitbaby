@@ -42,7 +42,7 @@ def file_as_filelike(data, actors, linear=False, format='png'):
     data = StringIO.StringIO()
 
     logger.debug('Printing figure to %s format' % format)
-    figure.savefig(filename=data, facecolor='.75')
+    figure.savefig(filename=data, format=format, facecolor='.75')
     logger.debug(u'… %s output done!' % format)
     data.seek(0)
 
