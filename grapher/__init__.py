@@ -12,11 +12,12 @@ class Grapher(object):
 
     Which currently is nothing.
     """
-    def __init__(self, linear=False, output_file='out.png'):
+    def __init__(self, actors, linear=False, output_file='out.png'):
         """
         __init__ of Grapher classes should throw ImportError if a needed
         library is missing.
         """
+        self._actors = actors
         self._linear_graph = linear
         self._outout_file = output_file
 
@@ -31,7 +32,7 @@ class File(Grapher):
         self._grapher = file_grapher.save_file
 
     def process_data(self, data):
-        self._grapher(data, output_file=self._outout_file,
+        self._grapher(data, self._actors, output_file=self._outout_file,
                 linear=self._linear_graph)
 
 class UIGrapher(Grapher):
@@ -39,7 +40,7 @@ class UIGrapher(Grapher):
     UI grapher classes inherit from this.
     """
     def process_data(self, data):
-        self._grapher(data, self._linear_graph)
+        self._grapher(data, self._actors, self._linear_graph)
 
 class WX(UIGrapher):
     def __init__(self, *args, **kwargs):

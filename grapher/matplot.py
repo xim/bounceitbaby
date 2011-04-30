@@ -1,4 +1,4 @@
-from itertools import cycle
+from itertools import cycle, count
 
 from matplotlib.dates import DateFormatter
 from matplotlib.figure import Figure
@@ -22,7 +22,8 @@ class Graph(Figure):
     arrows = [('wedge', (.25, .25, 0)), ('->', (0, .5, 0)), ('->', (0, 0, .5)),
             ('-|>', (.5, 0, 0)), ('fancy', 'k')]
 
-    def __init__(self, data, linear=False):
+    def __init__(self, data, actors, linear=False):
+        self._actors = dict(zip(actors, count()))
         self._is_linear = linear
         self._coord = XCoordHelper(linear)
 
@@ -34,8 +35,6 @@ class Graph(Figure):
         # ... Wow, we do a lot of manual housekeeping!
         # Make the arrows infinitely reusable.
         self._arrows = cycle(self.arrows)
-        # Remember all the actors we see.
-        self._actors = {}
         # Remember all distinct message types.
         self._msg_types = {}
         # For remembering the message type at each timestamp. TODO: Kind of
@@ -45,20 +44,15 @@ class Graph(Figure):
 
         # Call all functions on the object, in natural order.
         logger.debug('Iterating %s in %s (linear: %s)' % (data, self, linear))
+        self._add_actors()
         self._iterate_data(data)
         logger.debug('Setting graph parameters')
-        self._add_actors()
         self._set_axes_options()
         self._set_tick_parameters()
         logger.debug('%s seems to have exited successfully' % self)
 
     def _iterate_data(self, data):
         for item in data:
-
-            # Populate the _actors variable in a kind of brute-force way
-            for actor in (item.recipient, item.sender):
-                if not actor in self._actors:
-                    self._actors[actor] = len(self._actors)
 
             # Extract x and y values into names that make more sense graph-wize
             x0, y0 = item.sent_time, self._actors[item.sender]

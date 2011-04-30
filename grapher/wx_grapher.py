@@ -13,9 +13,11 @@ import logging
 
 logger = logging.getLogger('bounceitbaby')
 
-def visualize(data, linear=False):
+def visualize(*args, **kwargs):
     """
     The method that does all magic to to with WX.
+
+    All arguments passed to grapher.matplot.Graph
     """
 
     logger.debug('Spawning a WX interface')
@@ -24,7 +26,7 @@ def visualize(data, linear=False):
     win = wx.ScrolledWindow(frame, -1)
 
     logger.debug('Creating a Figure object from data')
-    figure = Graph(data, linear=linear)
+    figure = Graph(*args, **kwargs)
     canvas = FigureCanvas(win, -1, figure)
 
     # Basically: If time scale is 20 times longer than number of actors, make

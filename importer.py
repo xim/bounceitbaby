@@ -28,6 +28,7 @@ class LogReader(object):
         if filehandle is not None:
             filehandle.seek(0)
         self._filehandle = filehandle
+        self._actors = []
 
     def get_data(self, num_of_lines=None):
         """
@@ -96,6 +97,14 @@ class BaseRegExReader(LogReader):
                 hits += 1
         return hits
 
+    def get_actors(self):
+        if not self._actors:
+            for item in self.process():
+                for actor in (item.sender, item.recipient):
+                    if not actor in self._actors:
+                        self._actors.append(actor)
+        return self._actors
+
 class Foo(BaseRegExReader):
     """
     A test regex based parser.
@@ -117,6 +126,10 @@ class CDpp(BaseRegExReader):
         """
         for line in super(CDpp, self).get_data(*args, **kwargs):
             yield re.sub(r'(\d{2}:\d{2}):(\d{3})', r'\1.\2', line)
+
+    def get_actors(self):
+        # TODO: Parse the CD++ file!
+        return super(CDpp, self).get_actors()
 
 class Guess(LogReader):
     """
@@ -152,3 +165,8 @@ class Guess(LogReader):
         self.guess_reader()
 
         return self.reader.process()
+
+    def get_actors(self):
+        self.guess_reader()
+
+        return self.reader.get_actors()

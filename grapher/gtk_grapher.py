@@ -11,9 +11,11 @@ import logging
 
 logger = logging.getLogger('bounceitbaby')
 
-def visualize(data, linear=False):
+def visualize(*args, **kwargs):
     """
     Method that does all magic to to with GTK.
+
+    All arguments passed to grapher.matplot.Graph
     """
 
     logger.debug('Spawning a GTK window')
@@ -29,7 +31,7 @@ def visualize(data, linear=False):
                   vscrollbar_policy=gtk.POLICY_AUTOMATIC)
 
     logger.debug('Building the Figure from data')
-    figure = Graph(data, linear=linear)
+    figure = Graph(*args, **kwargs)
     canvas = FigureCanvas(figure)
     # If time scale is 20 times longer than number of actors, make it 20 times
     # wider than it is tall.

@@ -78,13 +78,13 @@ def main():
             out_file = "%s_%d.%s" % (out_file[0], index, out_file[1])
 
         log_parser_instance = getattr(importer, options.log_parser)(filename)
-        grapher_instance = getattr(grapher, options.graph_output)(
-                linear=options.linear,
-                output_file=out_file)
-
+        actors = log_parser_instance.get_actors()
         data = log_parser_instance.process()
+
         # TODO: This blocks the interface on multiple files for GUI
         # visualization. Concider forking new processes?
+        grapher_instance = getattr(grapher, options.graph_output)(
+                actors, linear=options.linear, output_file=out_file)
         grapher_instance.process_data(data)
 
 if __name__ == '__main__':
