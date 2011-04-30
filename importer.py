@@ -30,6 +30,9 @@ class LogReader(object):
         self._filehandle = filehandle
         self._actors = []
 
+    def __unicode__(self):
+        return '<%s Logreader>' % self.__class__.__name__
+
     def get_data(self, num_of_lines=None):
         """
         Magic methos that ensures data is cached. Allows fetching the first n
