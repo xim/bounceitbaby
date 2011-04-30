@@ -98,7 +98,7 @@ class Graph(Figure):
         for actor in self._actors:
             a_id = self._actors[actor]
             color = self.colors[a_id % len(self.colors)]
-            self._axes.axhline(y=a_id, linewidth=2, color=color, label=actor)
+            self._axes.axhline(y=a_id, linewidth=2, color=color)
 
     def _set_axes_options(self):
         """
