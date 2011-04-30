@@ -164,6 +164,9 @@ class Guess(LogReader):
         self.reader = sorted(aptitudes, lambda x,y: x[1] - y[1])[-1][0]
         self.candidates = []
 
+        self.process = self.reader.process
+        self.get_actors = self.reader.get_actors
+
     def process(self):
         self.guess_reader()
 
