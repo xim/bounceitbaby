@@ -80,7 +80,6 @@ class Graph(Figure):
             # its own rotation, right?
             offset = self._coord._increment / 4.
             if item.port_name:
-                # TODO: Make the distance relative to the hight of the graph?
                 self._axes.add_artist(Text(x_mid - offset, y_mid, item.port_name,
                     rotation='vertical', verticalalignment='center',
                     horizontalalignment='center'))
