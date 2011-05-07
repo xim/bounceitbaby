@@ -44,6 +44,8 @@ class Guess(LogReader):
         logger.debug('%s: List of log readers and their aptitudes: %s' % \
                 (self, repr(aptitudes)))
         self.reader = sorted(aptitudes, lambda x,y: x[1] - y[1])[-1][0]
+        logger.info('Determined "%s" to be of %s format' % \
+                (self._filename, type(self.reader).__name__))
         self.candidates = []
 
         self.process = self.reader.process
