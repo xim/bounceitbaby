@@ -28,11 +28,10 @@ class Graph(Figure):
         self._coord = XCoordHelper(linear, increment=len(actors)/10.)
 
         # Note: later we alter figsize according to scale. All numbers here are
-        # guesses and not really used later.
+        # semi-arbitrary and not really used later.
         super(Graph, self).__init__(dpi=90, figsize=(16,6))
         self._axes = self.add_axes((.05, .085, .92, .865))
 
-        # ... Wow, we do a lot of manual housekeeping!
         # Make the arrows infinitely reusable.
         self._arrows = cycle(self.arrows)
         # Remember all distinct message types.
