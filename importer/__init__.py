@@ -20,6 +20,9 @@ class Guess(LogReader):
     """
     A log reader that reads a few lines and tests it against all available log
     parser classes using their line_fmt string.
+    The available candidate classes are set in self.candidates.
+    The get_aptitude function is called on each, and the hightest ranking class
+    is used for parsing the file.
     """
     def __init__(self, *args, **kwargs):
         super(Guess, self).__init__(*args, **kwargs)

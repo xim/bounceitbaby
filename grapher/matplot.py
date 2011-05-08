@@ -14,13 +14,16 @@ logger = logging.getLogger('bounceitbaby')
 
 class Graph(Figure):
 
+    # Colors used for the actors' horizontal lines
     colors = ('r', 'g', 'b', 'c', 'm', 'k')
-    # TODO: The arrow 'simple' makes the library die. A bug. Fixed in
-    # matplotlib r8720/r8721 I think.
     # For all the possible arrow styles:
     # http://matplotlib.sourceforge.net/plot_directive/mpl_examples/pylab_examples/fancyarrow_demo.hires.png
     arrows = [('wedge', (.25, .25, 0)), ('->', (0, .5, 0)), ('->', (0, 0, .5)),
             ('-|>', (.5, 0, 0)), ('fancy', 'k')]
+    # TODO: The arrow 'simple' makes the library die sometimes. A bug. Fixed in
+    # matplotlib r8720/r8721 I think. If you see "ValueError: Given lines do
+    # not intersect", that can be caused by a combination of arrows used and/or
+    # the initial parameters of the graph (See comment some 10-15 lines below).
 
     def __init__(self, data, actors, linear=False):
         self._actors = dict(zip(actors, count()))
@@ -28,7 +31,10 @@ class Graph(Figure):
         self._coord = XCoordHelper(linear, increment=len(actors)/10.)
 
         # Note: later we alter figsize according to scale. All numbers here are
-        # semi-arbitrary and not really used later.
+        # semi-arbitrary and not really used later. Less arbitrary values or
+        # using the values we actually want to use later crashes the library,
+        # though. If you experience "ValueError: Given lines do not intersect",
+        # feel free to experiment with these values and report your findings.
         super(Graph, self).__init__(dpi=90, figsize=(16,6))
         self._axes = self.add_axes((.05, .085, .92, .865))
 

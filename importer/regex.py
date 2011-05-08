@@ -29,6 +29,10 @@ class BaseRegExReader(LogReader):
                 logger.debug('Line: ' + line)
 
     def get_aptitude(self):
+        """
+        Regex aptitude is defined as amount of lines matching the line_fmt
+        regex, up to 5.
+        """
         hits = 0
         for line in self.get_data(5):
             if re.match(self.line_fmt, line):
@@ -42,4 +46,3 @@ class BaseRegExReader(LogReader):
                     if not actor in self._actors:
                         self._actors.append(actor)
         return self._actors
-

@@ -15,7 +15,7 @@ class Grapher(object):
     def __init__(self, actors, linear=False, output_file='out.png'):
         """
         __init__ of Grapher classes should throw ImportError if a needed
-        library is missing.
+        library is missing. This facilitates the Auto class.
         """
         self._actors = actors
         self._linear_graph = linear
@@ -24,7 +24,6 @@ class Grapher(object):
 class File(Grapher):
     """
     Save to a graphics file.
-    kwargs inherited from Grapher.
     """
     def __init__(self, *args, **kwargs):
         super(File, self).__init__(*args, **kwargs)
@@ -43,18 +42,29 @@ class UIGrapher(Grapher):
         self._grapher(data, self._actors, self._linear_graph)
 
 class WX(UIGrapher):
+    """
+    Visualize the graph in a UI window using WX
+    """
     def __init__(self, *args, **kwargs):
         super(WX, self).__init__(*args, **kwargs)
         import wx_grapher
         self._grapher = wx_grapher.visualize
 
 class GTK(UIGrapher):
+    """
+    Visualize the graph in a UI window using GTK
+    """
     def __init__(self, *args, **kwargs):
         super(GTK, self).__init__(*args, **kwargs)
         import gtk_grapher
         self._grapher = gtk_grapher.visualize
 
 class Auto(Grapher):
+    """
+    Visualize the graph in the first suitable output module.
+    Priority of output modules is set by self.outputs.
+    *args and **kwargs are passed to underlying modules.
+    """
     def __init__(self, *args, **kwargs):
         self._args = args
         self._kwargs = kwargs
@@ -62,6 +72,10 @@ class Auto(Grapher):
         self._output = None
 
     def try_inits(self):
+        """
+        Go through each output in self.output and test if we can use it for
+        processing data.
+        """
         for output in self.outputs:
             logger.debug('Auto grapher trying to load %s for graph' % output)
             try:
@@ -74,6 +88,7 @@ class Auto(Grapher):
         raise ImportError('Could not find any valid output modules')
 
     def process_data(self, data):
+        "Runs try_inits to find an output module, then runs its process_data."
         if self._output is None:
             self.try_inits()
         self._output.process_data(data)
