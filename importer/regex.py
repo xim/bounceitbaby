@@ -4,6 +4,10 @@ import re
 
 from base import LogReader, DataItem
 
+import logging
+
+logger = logging.getLogger('bounceitbaby')
+
 class BaseRegExReader(LogReader):
     u"""
     Base class for simple regex line parsers.
@@ -19,6 +23,10 @@ class BaseRegExReader(LogReader):
                 kwargs = dict((field, None) for field in DataItem._fields)
                 kwargs.update(match.groupdict())
                 yield DataItem(**kwargs)
+            else:
+                logger.warning('Encountered a line that did not match the ' +
+                        'log format "%s"' % type(self).__name__)
+                logger.debug('Line: ' + line)
 
     def get_aptitude(self):
         hits = 0
