@@ -66,6 +66,7 @@ class Auto(Grapher):
             logger.debug('Auto grapher trying to load %s for graph' % output)
             try:
                 self._output = output(*self._args, **self._kwargs)
+                self.process_data = self._output.process_data
                 return
             except ImportError:
                 logger.debug('%s not available for output' % \
